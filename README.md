@@ -1,70 +1,125 @@
-# Getting Started with Create React App
+# Test de automatización del build de create-react-app y su despligue en localhost usando GitHub Actions
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
-## Available Scripts
+## Runner
+El runner es la aplicación de GitHbub que escucha si hay cambios en el repo (un nuevo push o pull request)
 
-In the project directory, you can run:
+Cuando el runner detecta un nuevo cambio crea un nuevo build y lo despliega (en el servidor o, en el caso de esta prueba, en el puerto 3000 de localhost), machacando al build anterior.
 
-### `npm start`
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+## Pasos
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+## Crear el cascarón de create-react-app y de un repo de prueba
+-En local: 
 
-### `npm test`
+npx create-react-app myapp && cd myapp
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+-En la cuenta de GitHub crear un repo de prueba, ej: automationTest
 
-### `npm run build`
+-En local: push del cascarón vacío de create-react-app al repo 
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+## Crear el fichero .yml para el runner
+En el repo:
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+* Menú superior horizontal > Actions
 
-### `npm run eject`
+* Debajo de "Suggested for this repo", en Node.js, pinchar en **Configure** (debe aparecer un fichero editable)
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+Contenido del fichero .yml:
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+**On**: define cuando el runner hará el build y despligue (por defecto, cada vez que se haga un push o un pull request)
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+**Jobs: build** se refiere a todos los pasos para hacer el build: descargar Node, instalarlo, instalar dependencias y hacer el build cada vez que el runner detecte un cambio en el repo
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+**Steps**: todas estos pasos por separado
 
-## Learn More
+## Modificar el fichero .yml
+-Para esta prueba modificamos lo siguiente: 
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+**runs-on: self-hosted** (en vez del valor que haya por defecto, ej: "ubuntu-latest"), con esto el runner correrá en nuestra máquina (o en su momento en el servidor) y no en una máquina virtual de GitHub
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+**node-version: [14.x]** (poner preferiblemente solo una versión de Node)
 
-### Code Splitting
+**run: npm i** (en vez de ci)
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+-pinchar en el botón verde 'start commit' (o algo así)
 
-### Analyzing the Bundle Size
+## Instalar y ejecutar el runner en local
+-En la cuenta de Github > repo de prueba > settings (menú superior horizontal) 
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+-En Settings: en el menú lateral izquierdo, en el desplegable Actions
+seleccionar Runners
 
-### Making a Progressive Web App
+-Pinchar en **new-self-hosted-runner**
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+-Seleccionar el SO y la architectura del procesador 
 
-### Advanced Configuration
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+-En la pantalla anterior seguir la lista de comandos para descargar, instalar y configurar el runner en un directorio nuevo en local
 
-### Deployment
+Nota: esta configuración es lo que conecta al runner en nuestra máquina (o en el servidor) con el repo
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+Nota: decir que sí (o aceptar el default) en las preguntas de configuración del runner hasta que aparezca: 
 
-### `npm run build` fails to minify
+```sh
+√ Runner successfully added
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+√ Runner connection is good
+
+√ Settings Saved
+```
+
+-Ejecutar el runner (última instrucción de la lista)
+
+Debe aparecer:
+
+```sh
+√ Connected to GitHub
+Listening for Jobs
+Running job: build (14.x)
+```
+-Volvemos al repo > Settings > Actions
+
+En **All Workflows** debe aparecer el runner con el nombre del repo con un círculo verde (el runner está ya escuchando)
+
+## Despliegue automatizado de la app en local
+
+-En local abrimos una nueva consola
+
+-Hacemos cualquier cambio visible en el código, ej: cambiar el textode algún elemento HTML en el fichero App.js
+
+-Hacemos git add y git commit
+
+-Al hacer el push en localhost:3000 deberiamos ver automáticamente reflejado el cambio
+(sin hacer npm start ni npm run build)
+
+-En la nueva consola el output indica que se ha hecho un nuevo build con nuevos ficheros chunk css y js. 
+
+## Despliegue en el servidor
+
+-Seguir los pasos anteriores de instalación del runner (menos el último) para que quede como un servicio permanente del 
+sistema
+
+-En vez del último paso (ejecución), hacemos lo siguiente:
+
+```sh
+sudo ./svc sh install 
+sudo ./svc sh start 
+```
+## Identificar la ruta donde el runner está haciendo el build
+
+-Ir al subdirectorio donde está instalado el runner/_work/ subdirectorio_con_el_nombre_del_repo/ subdirectorio_con_el_nombre_del_repo (sí, otra vez)/build
+
+-cd a la ruta anterior
+
+-hacemos pwd (y copiamos toda la ruta)
+
+## Cambiar la configuración de nginx en sites available
+
+-En el fichero default de la configuración de nginx (/etc/nginx/sites-available) y poner lo siguiente: 
+
+root nombredelaruta (en vez de /var/www/html)
+
+
+
