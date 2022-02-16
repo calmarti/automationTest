@@ -83,18 +83,17 @@ Running job: build (14.x)
 
 En **All Workflows** debe aparecer el runner con el nombre del repo con un círculo verde (el runner está ya escuchando)
 
-## Despliegue automatizado de la app en local
+## ~~Despliegue~~ Creación automatizada del build en el repo al hacer un push en local (CORRECCIONES)
 
 -En local abrimos una nueva consola
 
--Hacemos cualquier cambio visible en el código, ej: cambiar el textode algún elemento HTML en el fichero App.js
+-Hacemos cualquier cambio visible en el código, ej: cambiar el texto de algún elemento HTML en el fichero App.js
 
 -Hacemos git add y git commit
 
--Al hacer el push en localhost:3000 deberiamos ver automáticamente reflejado el cambio
-(sin hacer npm start ni npm run build)
+-Al hacer el push automáticamente se crea un nuevo build en el repo de GitHub
 
--En la nueva consola el output indica que se ha hecho un nuevo build con nuevos ficheros chunk css y js. 
+
 
 ## Despliegue en el servidor
 
