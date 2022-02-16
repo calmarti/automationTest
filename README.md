@@ -1,11 +1,9 @@
-# Test de automatización del build de create-react-app y su despligue en localhost usando GitHub Actions
-
+# Test de automatización del build de create-react-app ~~y despligue en localhost~~ usando GitHub Actions
 
 ## Runner
 El runner es la aplicación de GitHbub que escucha si hay cambios en el repo (un nuevo push o pull request)
 
-Cuando el runner detecta un nuevo cambio crea un nuevo build y lo despliega (en el servidor o, en el caso de esta prueba, en el puerto 3000 de localhost), machacando al build anterior.
-
+Cuando el runner detecta un nuevo cambio crea un nuevo build ~~en el repositorio de GitHub~~ en una subruta local (o del servidor) del directorio donde hemos instalado el runner, machacando así al build anterior. 
 
 ## Pasos
 
@@ -28,7 +26,7 @@ En el repo:
 
 Contenido del fichero .yml:
 
-**On**: define cuando el runner hará el build y despligue (por defecto, cada vez que se haga un push o un pull request)
+**On**: define cuando el runner hará el build (por defecto, cada vez que se haga un push o un pull request)
 
 **Jobs: build** se refiere a todos los pasos para hacer el build: descargar Node, instalarlo, instalar dependencias y hacer el build cada vez que el runner detecte un cambio en el repo
 
@@ -56,7 +54,7 @@ seleccionar Runners
 -Seleccionar el SO y la architectura del procesador 
 
 
--En la pantalla anterior seguir la lista de comandos para descargar, instalar y configurar el runner en un directorio nuevo en local
+-En la pantalla anterior seguir la lista de comandos para descargar, instalar y configurar el runner en un directorio nuevo en local que debe ser DISTINTO al directorio **myapp**
 
 Nota: esta configuración es lo que conecta al runner en nuestra máquina (o en el servidor) con el repo
 
@@ -91,9 +89,14 @@ En **All Workflows** debe aparecer el runner con el nombre del repo con un círc
 
 -Hacemos git add y git commit
 
--Al hacer el push automáticamente se crea un nuevo build en el repo de GitHub
+-Al hacer el push automáticamente se crea un nuevo build ~~en el repo de GitHub que sobreescribe el anterior~~ en el directorio 
+donde se ha instalado el runner (ej: ~/actions-runner)
 
+-Situarse en la ruta donde se crea/machaca el build: ~/actions-runner/_work/ subdirectorio_con_el_nombre_del_repo/ subdirectorio_con_el_nombre_del_repo (sí, otra vez)/build
 
+-Comprobar que el index.html refleja los cambios del último push
+
+Nota: El despliegue en local no tiene mucho sentido, por tanto, este debería probarse directamente en el servidor 
 
 ## Despliegue en el servidor
 
@@ -108,7 +111,7 @@ sudo ./svc sh start
 ```
 ## Identificar la ruta donde el runner está haciendo el build
 
--Ir al subdirectorio donde está instalado el runner/_work/ subdirectorio_con_el_nombre_del_repo/ subdirectorio_con_el_nombre_del_repo (sí, otra vez)/build
+-Ir al subdirectorio donde está instalado el runner/_work/ subdirectorio_con_el_nombre_del_repo/ subdirectorio_con_el_nombre_del_repo/build
 
 -cd a la ruta anterior
 
