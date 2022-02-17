@@ -54,9 +54,9 @@ seleccionar Runners
 -Seleccionar el SO y la architectura del procesador 
 
 
--En la pantalla anterior seguir la lista de comandos para descargar, instalar y configurar el runner en un directorio nuevo en local que debe ser DISTINTO al directorio **myapp**
+-En la pantalla anterior seguir la lista de comandos para descargar, instalar y configurar el runner en un directorio nuevo en local en **en una ubicación distinta a la del directorio myapp**. Por defecto el nombre del directorio que se crea al instalar el runner es: **actions-runner**
 
-Nota: esta configuración es lo que conecta al runner en nuestra máquina (o en el servidor) con el repo
+Nota: esta configuración es lo que conecta al runner en nuestra máquina (o en el servidor) con GitHub
 
 Nota: decir que sí (o aceptar el default) en las preguntas de configuración del runner hasta que aparezca: 
 
@@ -85,30 +85,33 @@ En **All Workflows** debe aparecer el runner con el nombre del repo con un círc
 
 -En local abrimos una nueva consola
 
--Hacemos cualquier cambio visible en el código, ej: cambiar el texto de algún elemento HTML en el fichero App.js
+-Hacemos cualquier cambio en el código de 'src' que luego podamos ver fácilmente en el build, ej: cambiar el texto del elemento HTML 'title' en el fichero index.html
 
 -Hacemos git add y git commit
 
--Al hacer el push automáticamente se crea un nuevo build ~~en el repo de GitHub que sobreescribe el anterior~~ en el directorio 
+-Al hacer el push automáticamente se crea un nuevo build ~~en el repo de GitHub~~  que sobreescribe el anteriore en el directorio 
 donde se ha instalado el runner (ej: ~/actions-runner)
 
--Situarse en la ruta donde se crea/machaca el build: ~/actions-runner/_work/ subdirectorio_con_el_nombre_del_repo/ subdirectorio_con_el_nombre_del_repo (sí, otra vez)/build
+-Situarse en la ruta donde se crea/machaca el build: 
+
+ejemplo: ~/actions-runner/_work/ subdirectorio_con_el_nombre_del_repo/ subdirectorio_con_el_nombre_del_repo (sí, otra vez)/build
 
 -Comprobar que el index.html refleja los cambios del último push
 
-Nota: El despliegue en local no tiene mucho sentido, por tanto, este debería probarse directamente en el servidor 
+Nota: El despliegue en local no tiene mucho sentido, por tanto, el despliegue debería probarse directamente en el servidor 
 
 ## Despliegue en el servidor
 
--Seguir los pasos anteriores de instalación del runner (menos el último) para que quede como un servicio permanente del 
-sistema
+-Seguir los pasos del apartado **Instalación y ejecución del runner** (menos el último, o sea, la ejecución del runner) para que quede como un servicio permanente del sistema
 
--En vez del último paso (ejecución), hacemos lo siguiente:
+-En vez del último paso (ejecución puntual), hacemos lo siguiente:
 
 ```sh
 sudo ./svc sh install 
 sudo ./svc sh start 
 ```
+esto deja al runner ejecutándose permanentemente, aun si se reinicia el servidor 
+
 ## Identificar la ruta donde el runner está haciendo el build
 
 -Ir al subdirectorio donde está instalado el runner/_work/ subdirectorio_con_el_nombre_del_repo/ subdirectorio_con_el_nombre_del_repo/build
