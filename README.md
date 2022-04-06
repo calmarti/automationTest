@@ -1,4 +1,4 @@
-# Test de automatización del build de create-react-app ~~y despligue en localhost~~ usando GitHub Actions
+# Test de automatización del build de create-react-app usando GitHub Actions
 
 ## Runner
 El runner es la aplicación de GitHbub que escucha si hay cambios en el repo (un nuevo push o pull request)
